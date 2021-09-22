@@ -1,16 +1,44 @@
 const express = require("express");
-let router = express.Router(); // router should be let variable.
 const accountModel = require("../Models/accountModel");
+const PAGE_SIZE = 2;
+
+let router = express.Router(); // router should be let variable.
 
 router.get("/", (req, res, next) => {
-    accountModel
-        .find({})
-        .then((data) => {
-            res.json(data);
-        })
-        .catch((err) => {
-            res.status(500).json("Server Error");
-        });
+    let page = parseInt(req.query.page);
+    if (page) {
+        /**
+         *  GET page
+         */
+        if (page < 1) {
+            page = 1;
+        }
+
+        let skip = (page - 1) * PAGE_SIZE;
+
+        accountModel
+            .find({})
+            .skip(skip)
+            .limit(PAGE_SIZE)
+            .then((data) => {
+                res.json(data);
+            })
+            .catch((err) => {
+                res.status(500).json("Server Error");
+            });
+    } else {
+        /**
+         *  GET all users
+         */
+        accountModel
+            .find({})
+            .then((data) => {
+                res.json(data);
+            })
+            .catch((err) => {
+                res.status(500).json("Server Error");
+            });
+    }
 });
 
 router.get("/:id", (req, res, next) => {
