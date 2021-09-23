@@ -1,5 +1,5 @@
 const express = require("express");
-const accountModel = require("../Models/accountModel");
+const accountModel = require("../models/account.model");
 const PAGE_SIZE = 2;
 
 let router = express.Router(); // router should be let variable.
